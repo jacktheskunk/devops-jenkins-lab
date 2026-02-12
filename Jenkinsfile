@@ -19,12 +19,12 @@ pipeline {
             }
         }
 
-#        stage('Security Scan') {
-#            steps {
-#                sh 'trivy image --exit-code 0 --severity HIGH,CRITICAL $IMAGE_NAME'
-#            }
-#        }
-
+/*        stage('Security Scan') {
+            steps {
+                sh 'trivy image --exit-code 0 --severity HIGH,CRITICAL $IMAGE_NAME'
+            }
+        }
+*/
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
