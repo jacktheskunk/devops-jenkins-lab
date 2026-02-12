@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry('https://registry-1.docker.io', 'dockerhub-creds') {
-                        sh "docker push ${IMAGE_NAME}:latest"
+                        sh "docker push ${IMAGE_NAME}"
                     }
                 }
             }
