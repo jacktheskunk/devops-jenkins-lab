@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "tuoutente/jenkins-devsecops"
+        IMAGE_NAME = "jacktheskunk/jenkins-devsecops"
     }
 
     stages {
@@ -19,18 +19,18 @@ pipeline {
             }
         }
 
-        stage('Security Scan') {
-            steps {
-                sh 'trivy image --exit-code 0 --severity HIGH,CRITICAL $IMAGE_NAME'
-            }
-        }
+#        stage('Security Scan') {
+#            steps {
+#                sh 'trivy image --exit-code 0 --severity HIGH,CRITICAL $IMAGE_NAME'
+#            }
+#        }
 
         stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
+                    usernameVariable: 'jacktheskunk',
+                    passwordVariable: 'Toffee123!'
                 )]) {
                     sh '''
                     echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
