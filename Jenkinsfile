@@ -2,11 +2,12 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "jacktheskunk/jenkins-devsecops"
+        IMAGE_NAME = "jacktheskunk/jenkins-devsecops:latest"
         PATH = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -15,43 +16,27 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $IMAGE_NAME .'
+                sh "docker build -t ${IMAGE_NAME} ."
             }
         }
 
-          stage('Push to Docker Hub') {
+        stage('Push to Docker Hub') {
             steps {
-              script {
-                docker.withRegistry('https://registry-1.docker.io', 'dockerhub-creds') {
-                  sh "docker push $IMAGE_NAME"
-            }
-        }
-    }
-}
-
-
-/*        stage('Push to Docker Hub') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh '''
-                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-                    docker push $IMAGE_NAME
-                    '''
+                script {
+                    docker.withRegistry('https://registry-1.docker.io', 'dockerhub-creds') {
+                        sh "docker push ${IMAGE_NAME}"
+                    }
                 }
             }
         }
-*/
+
         stage('Deploy Local') {
             steps {
-                sh '''
+                sh """
                 docker stop devops-app || true
                 docker rm devops-app || true
-                docker run -d --name devops-app -p 3000:3000 $IMAGE_NAME
-                '''
+                docker run -d --name devops-app -p 3000:3000 ${IMAGE_NAME}
+                """
             }
         }
     }
