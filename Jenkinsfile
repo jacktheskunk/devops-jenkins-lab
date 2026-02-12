@@ -42,9 +42,9 @@ pipeline {
                     docker push $IMAGE_NAME
                     '''
                 }
-            }*/
+            }
         }
-
+*/
         stage('Deploy Local') {
             steps {
                 sh '''
