@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:28.0.1-cli' // container con Docker CLI
-            args '-v /var/run/docker.sock:/var/run/docker.sock' // monta il docker.sock
-        }
-    }
+    agent any
 
     environment {
         IMAGE_NAME = "jacktheskunk/jenkins-devsecops"
@@ -24,7 +19,18 @@ pipeline {
             }
         }
 
-        stage('Push to Docker Hub') {
+          stage('Push to Docker Hub') {
+            steps {
+              script {
+                docker.withRegistry('https://registry-1.docker.io', 'dockerhub-creds') {
+                  sh "docker push $IMAGE_NAME"
+            }
+        }
+    }
+}
+
+
+/*        stage('Push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(
                     credentialsId: 'dockerhub-creds',
@@ -36,7 +42,7 @@ pipeline {
                     docker push $IMAGE_NAME
                     '''
                 }
-            }
+            }*/
         }
 
         stage('Deploy Local') {
