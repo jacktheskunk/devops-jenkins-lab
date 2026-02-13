@@ -5,5 +5,5 @@ COPY . .
 
 RUN echo "Demo DevSecOps App"
 
-CMD ["node", "-e", "console.log('App running')"]
+CMD ["node", "server.js"]
 
